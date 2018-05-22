@@ -24,25 +24,34 @@ afterAll(async () => {
   conn.close();
 });
 
-describe('test the me query', () => {
-  test('return null if no cookie', async () => {
-    const client = new TestClient(process.env.TEST_HOST as string);
+describe('logout', () => {
+  test('multiple session logout', async () => {
+    const sess1 = new TestClient(process.env.TEST_HOST as string);
+    const sess2 = new TestClient(process.env.TEST_HOST as string);
 
-    const response = await client.me();
-    expect(response.data.me).toBeNull();
+    await sess1.login(email, password);
+    await sess2.login(email, password);
+
+    expect(await sess1.me()).toEqual(await sess2.me());
+    await sess1.logout();
+    expect(await sess1.me()).toEqual(await sess2.me());
   });
 
-  test('get current user', async () => {
+  test('single session logout', async () => {
     const client = new TestClient(process.env.TEST_HOST as string);
+
     await client.login(email, password);
-    // make another request and make sure we get our cookie info back
-    // withCredentials: true - ensures we make use of cookie info
     const response = await client.me();
+
     expect(response.data).toEqual({
       me: {
         id: userId,
         email
       }
     });
+
+    await client.logout();
+    const response2 = await client.me();
+    expect(response2.data.me).toBeNull();
   });
 });
