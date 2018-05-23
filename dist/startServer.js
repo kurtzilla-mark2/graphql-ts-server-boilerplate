@@ -20,8 +20,8 @@ const passport_twitter_1 = require("passport-twitter");
 const redis_1 = require("./redis");
 const createTypeormConn_1 = require("./utils/createTypeormConn");
 const confirmEmail_1 = require("./routes/confirmEmail");
-const genSchema_1 = require("./utils/genSchema");
-const constants_1 = require("./_lookups/constants");
+const genSchema_1 = require("./utils/Schema/genSchema");
+const constants_1 = require("./utils/Lookups/constants");
 const User_1 = require("./entity/User");
 const RedisStore = connectRedis(session);
 exports.startServer = () => __awaiter(this, void 0, void 0, function* () {
@@ -34,6 +34,9 @@ exports.startServer = () => __awaiter(this, void 0, void 0, function* () {
             req: request
         })
     });
+    console.log('--options--', server.options);
+    const apiPort = server.options.port;
+    console.log('api port', apiPort);
     server.express.use(new RateLimit({
         store: new RateLimitRedisStore({
             client: redis_1.redis
@@ -47,7 +50,7 @@ exports.startServer = () => __awaiter(this, void 0, void 0, function* () {
             client: redis_1.redis,
             prefix: constants_1.redisSessionPrefix
         }),
-        name: 'qid',
+        name: process.env.SESSION_KEY_NAME,
         secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
@@ -68,7 +71,7 @@ exports.startServer = () => __awaiter(this, void 0, void 0, function* () {
     passport.use(new passport_twitter_1.Strategy({
         consumerKey: process.env.TWITTER_CONSUMER_KEY,
         consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-        callbackURL: 'http://localhost:4000/auth/twitter/callback',
+        callbackURL: `http://localhost:${apiPort}/auth/twitter/callback`,
         includeEmail: true
     }, (_, __, profile, cb) => __awaiter(this, void 0, void 0, function* () {
         const { id, emails } = profile;

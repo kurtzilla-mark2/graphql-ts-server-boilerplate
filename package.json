@@ -9,7 +9,7 @@
     "@types/express-session": "^1.15.8",
     "@types/ioredis": "^3.2.7",
     "@types/jest": "^22.2.3",
-    "@types/node": "^9.6.6",
+    "@types/node": "^10.1.2",
     "@types/node-fetch": "^1.6.9",
     "@types/passport": "^0.4.5",
     "@types/passport-twitter": "^1.0.34",
@@ -18,7 +18,7 @@
     "@types/uuid": "^3.4.3",
     "@types/ws": "^5.1.1",
     "@types/yup": "^0.24.3",
-    "gql2ts": "^1.7.2",
+    "gql2ts": "^1.8.0",
     "jest": "^22.4.3",
     "ts-jest": "^22.4.4",
     "ts-node": "6.0.0",
@@ -56,7 +56,8 @@
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "ftest": "NODE_ENV=test jest --forceExit --verbose --runInBand",
+    "dstart":
+      "NODE_ENV=development nodemon  --exec ts-node --inspect-brk src/index.ts",
     "test": "NODE_ENV=test jest --watch --verbose --runInBand",
     "gen-schema-types": "ts-node src/scripts/createTypes.ts"
   },
@@ -65,14 +66,7 @@
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
   }
 }

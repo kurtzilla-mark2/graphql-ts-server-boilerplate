@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const yup = require("yup");
 const User_1 = require("../../../entity/User");
-const formatYupError_1 = require("../../../utils/formatYupError");
+const formatYupError_1 = require("../../../utils/ErrorHandling/formatYupError");
 const errorMessages_1 = require("./errorMessages");
 const yupSchemas_1 = require("../../_helpers/yupSchemas");
 const schema = yup.object().shape({

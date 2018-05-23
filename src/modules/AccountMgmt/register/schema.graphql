@@ -1,4 +1,4 @@
-# import Error from "../../../_lookups/shared.graphql"
+# import Error from "../../../utils/Schema/shared.graphql"
 
 type Query {
   bye: String

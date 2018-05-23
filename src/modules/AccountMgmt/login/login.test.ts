@@ -3,7 +3,7 @@ import { Connection } from 'typeorm';
 import { invalidLogin, confirmEmailError } from './errorMessages';
 import { User } from '../../../entity/User';
 import { createTypeormConn } from '../../../utils/createTypeormConn';
-import { TestClient } from '../../../utils/TestClient';
+import { TestClient } from '../../../testSetup/testClient';
 
 const email = 'tom@bob.com';
 const password = 'jalksdf';

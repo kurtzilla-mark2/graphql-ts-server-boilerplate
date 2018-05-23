@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = require("../../../entity/User");
 const errorMessages_1 = require("./errorMessages");
 const createTypeormConn_1 = require("../../../utils/createTypeormConn");
-const TestClient_1 = require("../../../utils/TestClient");
+const testClient_1 = require("../../../testSetup/testClient");
 const email = 'tom@bob.com';
 const password = 'jalksdf';
 let conn;
@@ -23,7 +23,7 @@ afterAll(() => __awaiter(this, void 0, void 0, function* () {
 }));
 describe('Register user', () => __awaiter(this, void 0, void 0, function* () {
     it('make sure we can register a user', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         const response = yield client.register(email, password);
         expect(response.data).toEqual({ register: null });
         const users = yield User_1.User.find({ where: { email } });
@@ -33,7 +33,7 @@ describe('Register user', () => __awaiter(this, void 0, void 0, function* () {
         expect(user.password).not.toEqual(password);
     }));
     it('test for dupe emails', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         const response2 = yield client.register(email, password);
         expect(response2.data.register).toHaveLength(1);
         expect(response2.data.register[0]).toEqual({
@@ -42,7 +42,7 @@ describe('Register user', () => __awaiter(this, void 0, void 0, function* () {
         });
     }));
     it('catch bad email', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         const response3 = yield client.register('ad', password);
         expect(response3.data).toEqual({
             register: [
@@ -58,7 +58,7 @@ describe('Register user', () => __awaiter(this, void 0, void 0, function* () {
         });
     }));
     it('catch bad password', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         const response4 = yield client.register(email, 'b');
         expect(response4.data).toEqual({
             register: [
@@ -70,7 +70,7 @@ describe('Register user', () => __awaiter(this, void 0, void 0, function* () {
         });
     }));
     it('catch bad email and password', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         const response5 = yield client.register('b', 'b');
         expect(response5.data).toEqual({
             register: [

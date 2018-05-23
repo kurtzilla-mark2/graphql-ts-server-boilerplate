@@ -2,7 +2,7 @@ import { Connection } from 'typeorm';
 
 import { createTypeormConn } from '../../../utils/createTypeormConn';
 import { User } from '../../../entity/User';
-import { TestClient } from '../../../utils/TestClient';
+import { TestClient } from '../../../testSetup/testClient';
 
 let conn: Connection;
 let userId: string;
@@ -26,7 +26,6 @@ afterAll(async () => {
 describe('test the me query', () => {
   test('return null if no cookie', async () => {
     const client = new TestClient(process.env.TEST_HOST as string);
-
     const response = await client.me();
     expect(response.data.me).toBeNull();
   });

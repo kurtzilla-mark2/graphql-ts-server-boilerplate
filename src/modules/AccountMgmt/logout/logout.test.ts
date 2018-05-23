@@ -2,7 +2,7 @@ import { Connection } from 'typeorm';
 
 import { createTypeormConn } from '../../../utils/createTypeormConn';
 import { User } from '../../../entity/User';
-import { TestClient } from '../../../utils/TestClient';
+import { TestClient } from '../../../testSetup/testClient';
 
 let conn: Connection;
 let userId: string;

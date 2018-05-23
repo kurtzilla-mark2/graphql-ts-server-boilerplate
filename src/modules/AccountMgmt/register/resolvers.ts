@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 import { ResolverMap } from '../../../types/graphql-utils';
 import { User } from '../../../entity/User';
-import { formatYupError } from '../../../utils/formatYupError';
+import { formatYupError } from '../../../utils/ErrorHandling/formatYupError';
 import {
   duplicateEmail,
   emailNotLongEnough,

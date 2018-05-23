@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const createTypeormConn_1 = require("../../../utils/createTypeormConn");
 const User_1 = require("../../../entity/User");
-const TestClient_1 = require("../../../utils/TestClient");
+const testClient_1 = require("../../../testSetup/testClient");
 let conn;
 let userId;
 const email = 'bob5@bob.com';
@@ -29,12 +29,12 @@ afterAll(() => __awaiter(this, void 0, void 0, function* () {
 }));
 describe('test the me query', () => {
     test('return null if no cookie', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         const response = yield client.me();
         expect(response.data.me).toBeNull();
     }));
     test('get current user', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         yield client.login(email, password);
         const response = yield client.me();
         expect(response.data).toEqual({

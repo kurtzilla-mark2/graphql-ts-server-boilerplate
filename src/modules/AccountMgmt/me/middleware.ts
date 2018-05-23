@@ -1,5 +1,5 @@
 import { Resolver } from '../../../types/graphql-utils';
-// import { logger } from '../../utils/logger';
+// import { logger } from '../../utils/ErrorHandling/logger';
 
 export default async (
   resolver: Resolver,

@@ -8,7 +8,7 @@ import {
   passwordNotLongEnough
 } from './errorMessages';
 import { createTypeormConn } from '../../../utils/createTypeormConn';
-import { TestClient } from '../../../utils/TestClient';
+import { TestClient } from '../../../testSetup/testClient';
 
 const email = 'tom@bob.com';
 const password = 'jalksdf';

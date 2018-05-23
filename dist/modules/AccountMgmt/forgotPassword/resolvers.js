@@ -10,13 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const yup = require("yup");
 const bcrypt = require("bcryptjs");
-const forgotPasswordLockAccount_1 = require("../../../utils/forgotPasswordLockAccount");
-const createForgotPasswordLink_1 = require("../../../utils/createForgotPasswordLink");
+const forgotPasswordLockAccount_1 = require("../../../utils/AccountMgmt/forgotPasswordLockAccount");
+const createForgotPasswordLink_1 = require("../../../utils/AccountMgmt/createForgotPasswordLink");
 const User_1 = require("../../../entity/User");
 const errorMessages_1 = require("./errorMessages");
-const constants_1 = require("../../../_lookups/constants");
+const constants_1 = require("../../../utils/Lookups/constants");
 const yupSchemas_1 = require("../../_helpers/yupSchemas");
-const formatYupError_1 = require("../../../utils/formatYupError");
+const formatYupError_1 = require("../../../utils/ErrorHandling/formatYupError");
 const schema = yup.object().shape({
     newPassword: yupSchemas_1.registerPasswordValidation
 });

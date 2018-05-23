@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const createTypeormConn_1 = require("../../../utils/createTypeormConn");
 const User_1 = require("../../../entity/User");
-const TestClient_1 = require("../../../utils/TestClient");
+const testClient_1 = require("../../../testSetup/testClient");
 let conn;
 let userId;
 const email = 'bob5@bob.com';
@@ -29,8 +29,8 @@ afterAll(() => __awaiter(this, void 0, void 0, function* () {
 }));
 describe('logout', () => {
     test('multiple session logout', () => __awaiter(this, void 0, void 0, function* () {
-        const sess1 = new TestClient_1.TestClient(process.env.TEST_HOST);
-        const sess2 = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const sess1 = new testClient_1.TestClient(process.env.TEST_HOST);
+        const sess2 = new testClient_1.TestClient(process.env.TEST_HOST);
         yield sess1.login(email, password);
         yield sess2.login(email, password);
         expect(yield sess1.me()).toEqual(yield sess2.me());
@@ -38,7 +38,7 @@ describe('logout', () => {
         expect(yield sess1.me()).toEqual(yield sess2.me());
     }));
     test('single session logout', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         yield client.login(email, password);
         const response = yield client.me();
         expect(response.data).toEqual({

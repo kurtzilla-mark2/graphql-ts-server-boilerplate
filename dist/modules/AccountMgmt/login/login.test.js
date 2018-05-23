@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const errorMessages_1 = require("./errorMessages");
 const User_1 = require("../../../entity/User");
 const createTypeormConn_1 = require("../../../utils/createTypeormConn");
-const TestClient_1 = require("../../../utils/TestClient");
+const testClient_1 = require("../../../testSetup/testClient");
 const email = 'tom@bob.com';
 const password = 'jalksdf';
 let conn;
@@ -34,11 +34,11 @@ const loginExpectError = (client, e, p, errMsg) => __awaiter(this, void 0, void 
 });
 describe('login', () => {
     test('email not found send back error', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         yield loginExpectError(client, 'some-email@bob.com', 'bad password', errorMessages_1.invalidLogin);
     }));
     test('email not confirmed', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         yield client.register(email, password);
         yield loginExpectError(client, email, password, errorMessages_1.confirmEmailError);
         yield User_1.User.update({ email }, { confirmed: true });

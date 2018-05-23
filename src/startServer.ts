@@ -5,15 +5,16 @@ import * as session from 'express-session';
 import * as connectRedis from 'connect-redis';
 import * as RateLimit from 'express-rate-limit';
 import * as RateLimitRedisStore from 'rate-limit-redis';
-import * as passport from 'passport';
-import { Strategy } from 'passport-twitter';
+// import * as passport from 'passport';
+// import { Strategy } from 'passport-twitter';
 
 import { redis } from './redis';
 import { createTypeormConn } from './utils/createTypeormConn';
 import { confirmEmail } from './routes/confirmEmail';
-import { genSchema } from './utils/genSchema';
-import { redisSessionPrefix } from './_lookups/constants';
-import { User } from './entity/User';
+import { genSchema } from './utils/Schema/genSchema';
+import { redisSessionPrefix } from './utils/Lookups/constants';
+// import { User } from './entity/User';
+import { implementPassportStrategies } from './utils/AccountMgmt/passportSetup';
 
 const RedisStore = connectRedis(session);
 
@@ -27,6 +28,8 @@ export const startServer = async () => {
       req: request
     })
   });
+
+  const apiPort = process.env.API_PORT;
 
   server.express.use(
     new RateLimit({
@@ -45,7 +48,7 @@ export const startServer = async () => {
         client: redis as any,
         prefix: redisSessionPrefix
       }),
-      name: 'qid',
+      name: process.env.SESSION_KEY_NAME as string,
       secret: process.env.SESSION_SECRET as string,
       resave: false,
       saveUninitialized: false,
@@ -69,73 +72,77 @@ export const startServer = async () => {
 
   const connection = await createTypeormConn();
 
+  implementPassportStrategies(connection, server);
+
   // begin passport
-  passport.use(
-    new Strategy(
-      {
-        consumerKey: process.env.TWITTER_CONSUMER_KEY as string,
-        consumerSecret: process.env.TWITTER_CONSUMER_SECRET as string,
-        callbackURL: 'http://localhost:4000/auth/twitter/callback',
-        includeEmail: true
-      },
-      async (_, __, profile, cb) => {
-        const { id, emails } = profile;
+  // passport.use(
+  //   new Strategy(
+  //     {
+  //       consumerKey: process.env.TWITTER_CONSUMER_KEY as string,
+  //       consumerSecret: process.env.TWITTER_CONSUMER_SECRET as string,
+  //       callbackURL: `${process.env.API_HOST}/auth/twitter/callback`,
+  //       includeEmail: true
+  //     },
+  //     async (_, __, profile, cb) => {
+  //       const { id, emails } = profile;
 
-        const query = connection
-          .getRepository(User)
-          .createQueryBuilder('user')
-          .where('user.twitterId = :id', { id });
+  //       const query = connection
+  //         .getRepository(User)
+  //         .createQueryBuilder('user')
+  //         .where('user.twitterId = :id', { id });
 
-        let email: string | null = null;
+  //       let email: string | null = null;
 
-        if (emails) {
-          email = emails[0].value;
-          query.orWhere('user.email = :email', { email });
-        }
+  //       if (emails) {
+  //         email = emails[0].value;
+  //         query.orWhere('user.email = :email', { email });
+  //       }
 
-        let user = await query.getOne();
+  //       let user = await query.getOne();
 
-        // this user needs to be registered
-        if (!user) {
-          user = await User.create({
-            twitterId: id,
-            email
-          }).save();
-        } else if (!user.twitterId) {
-          // merge account
-          // we found user by email
-          user.twitterId = id;
-          await user.save();
-        } else {
-          // we have a twitterId - nothing to do
-          // login
-        }
+  //       // this user needs to be registered
+  //       if (!user) {
+  //         user = await User.create({
+  //           twitterId: id,
+  //           email
+  //         }).save();
+  //       } else if (!user.twitterId) {
+  //         // merge account
+  //         // we found user by email
+  //         user.twitterId = id;
+  //         await user.save();
+  //       } else {
+  //         // we have a twitterId - nothing to do
+  //         // login
+  //       }
 
-        return cb(null, { id: user.id });
-      }
-    )
-  );
+  //       return cb(null, { id: user.id });
+  //     }
+  //   )
+  // );
 
-  server.express.use(passport.initialize());
-  // this is where user goes to sign in - redirects to twitter
-  server.express.get('/auth/twitter', passport.authenticate('twitter'));
-  // this is where twitter redirects back to after auth (or failure)
-  server.express.get(
-    '/auth/twitter/callback',
-    passport.authenticate('twitter', { session: false }),
-    (req, res) => {
-      (req.session as any).userId = (req.user as any).id;
-      // @todo redirect to frontend
-      res.redirect('/');
-    }
-  );
-  // end passport
+  // server.express.use(passport.initialize());
+
+  // // this is where user goes to sign in - redirects to twitter
+  // server.express.get('/auth/twitter', passport.authenticate('twitter'));
+  // // this is where twitter redirects back to after auth (or failure)
+  // server.express.get(
+  //   '/auth/twitter/callback',
+  //   passport.authenticate('twitter', { session: false }),
+  //   (req, res) => {
+  //     (req.session as any).userId = (req.user as any).id;
+  //     // @todo redirect to frontend
+  //     res.redirect('/');
+  //   }
+  // );
+  // // end passport
 
   const app = await server.start({
     cors,
-    port: process.env.NODE_ENV === 'test' ? 0 : 4000
+    port: process.env.NODE_ENV === 'test' ? 0 : apiPort
   });
-  console.log('Server is running on localhost:4000');
+
+  console.log(`Server is running on localhost:${apiPort}`);
 
   return app;
 };

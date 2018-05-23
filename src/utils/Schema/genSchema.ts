@@ -9,19 +9,23 @@ export const genSchema = () => {
 
   // loop thru the modules directory and find the categories
   let modules: string[] = [];
+  const modulesDir = path.join(__dirname, '../../modules');
+
   const categories = fs
-    .readdirSync(path.join(__dirname, '../modules'))
+    .readdirSync(modulesDir)
     .filter(name => !name.startsWith('_'));
 
   categories.forEach(category => {
     modules = fs
-      .readdirSync(path.join(__dirname, `../modules/${category}`))
+      .readdirSync(`${modulesDir}/${category}`)
       .filter(name => !name.startsWith('_'));
 
     modules.forEach(mod => {
-      const { resolvers } = require(`../modules/${category}/${mod}/resolvers`);
+      const {
+        resolvers
+      } = require(`${modulesDir}/${category}/${mod}/resolvers`);
       const typeDefs = importSchema(
-        path.join(__dirname, `../modules/${category}/${mod}/schema.graphql`)
+        `${modulesDir}/${category}/${mod}/schema.graphql`
       );
       schemas.push(makeExecutableSchema({ resolvers, typeDefs }));
     });

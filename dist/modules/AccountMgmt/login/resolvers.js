@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt = require("bcryptjs");
 const User_1 = require("../../../entity/User");
 const errorMessages_1 = require("./errorMessages");
-const constants_1 = require("../../../_lookups/constants");
+const constants_1 = require("../../../utils/Lookups/constants");
 const errorResponse = [
     {
         path: 'email',

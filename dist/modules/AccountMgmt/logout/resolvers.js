@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const removeAllUsersSessions_1 = require("../../../utils/removeAllUsersSessions");
+const removeAllUsersSessions_1 = require("../../../utils/AccountMgmt/removeAllUsersSessions");
 exports.resolvers = {
     Query: {
         stub: () => 'stub'

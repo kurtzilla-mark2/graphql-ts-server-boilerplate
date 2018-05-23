@@ -23,21 +23,12 @@
     core-js "^2.5.3"
     regenerator-runtime "^0.11.1"
 
-"@gql2ts/from-query@^1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@gql2ts/from-query/-/from-query-1.7.2.tgz#60e38c45d103331a3e9ebd185048f24bbb84cda3"
+"@gql2ts/from-query@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@gql2ts/from-query/-/from-query-1.8.0.tgz#a5dd66aaba57a4e51a60205352d0562214917313"
   dependencies:
-    "@gql2ts/language-typescript" "^1.7.2"
-    "@gql2ts/util" "^1.7.2"
-
-"@gql2ts/from-schema@^1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@gql2ts/from-schema/-/from-schema-1.7.2.tgz#c3279aea7ce623d5e525fdf5176fe5ffc582132d"
-  dependencies:
-    "@gql2ts/language-typescript" "^1.7.2"
-    "@gql2ts/util" "^1.7.2"
-    dedent "^0.7.0"
-    graphql ">= 0.10 <1.0.0"
+    "@gql2ts/language-typescript" "^1.8.0"
+    "@gql2ts/util" "^1.8.0"
 
 "@gql2ts/from-schema@^1.8.0":
   version "1.8.0"
@@ -48,14 +39,6 @@
     dedent "^0.7.0"
     graphql ">= 0.10 <1.0.0"
 
-"@gql2ts/language-typescript@^1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@gql2ts/language-typescript/-/language-typescript-1.7.2.tgz#7b5d5fbd851e0eea5fcba1380a4a3e047564acd3"
-  dependencies:
-    "@gql2ts/util" "^1.7.2"
-    humps "^2.0.0"
-    typescript "^2.2.2"
-
 "@gql2ts/language-typescript@^1.8.0":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@gql2ts/language-typescript/-/language-typescript-1.8.0.tgz#af61acd14f789c3175198426bef7fbf0a2954a4a"
@@ -63,10 +46,6 @@
     "@gql2ts/util" "^1.8.0"
     humps "^2.0.0"
     typescript "^2.2.2"
-
-"@gql2ts/util@^1.7.2":
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/@gql2ts/util/-/util-1.7.2.tgz#cdfc8d09abf5b116bcff888b15b512ebd5f0c417"
 
 "@gql2ts/util@^1.8.0":
   version "1.8.0"
@@ -173,9 +152,13 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^9.6.6":
+"@types/node@*":
   version "9.6.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.6.tgz#439b91f9caf3983cad2eef1e11f6bedcbf9431d2"
+
+"@types/node@^10.1.2":
+  version "10.1.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.1.2.tgz#1b928a0baa408fc8ae3ac012cc81375addc147c6"
 
 "@types/node@^9.4.6":
   version "9.6.7"
@@ -1795,13 +1778,13 @@ globals@^9.18.0:
   version "9.18.0"
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.18.0.tgz#aa3896b3e69b487f17e31ed2143d69a8e30c2d8a"
 
-gql2ts@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/gql2ts/-/gql2ts-1.7.2.tgz#2707f38aa3cce64d552fceb30baecb28a799c4f2"
+gql2ts@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/gql2ts/-/gql2ts-1.8.0.tgz#45af71a4aa5db0caa20fcb3b10b3c46bdacf321e"
   dependencies:
-    "@gql2ts/from-query" "^1.7.2"
-    "@gql2ts/from-schema" "^1.7.2"
-    "@gql2ts/util" "^1.7.2"
+    "@gql2ts/from-query" "^1.8.0"
+    "@gql2ts/from-schema" "^1.8.0"
+    "@gql2ts/util" "^1.8.0"
     commander "^2.9.0"
     graphql ">= 0.10 <1.0.0"
 

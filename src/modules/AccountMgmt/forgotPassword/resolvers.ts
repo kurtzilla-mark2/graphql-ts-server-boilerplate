@@ -2,13 +2,13 @@ import * as yup from 'yup';
 import * as bcrypt from 'bcryptjs';
 
 import { ResolverMap } from '../../../types/graphql-utils';
-import { forgotPasswordLockAccount } from '../../../utils/forgotPasswordLockAccount';
-import { createForgotPasswordLink } from '../../../utils/createForgotPasswordLink';
+import { forgotPasswordLockAccount } from '../../../utils/AccountMgmt/forgotPasswordLockAccount';
+import { createForgotPasswordLink } from '../../../utils/AccountMgmt/createForgotPasswordLink';
 import { User } from '../../../entity/User';
 import { userNotFoundError, expiredKeyError } from './errorMessages';
-import { forgotPasswordPrefix } from '../../../_lookups/constants';
+import { forgotPasswordPrefix } from '../../../utils/Lookups/constants';
 import { registerPasswordValidation } from '../../_helpers/yupSchemas';
-import { formatYupError } from '../../../utils/formatYupError';
+import { formatYupError } from '../../../utils/ErrorHandling/formatYupError';
 
 // from owasp
 // confirmation link should only last 20 minutes

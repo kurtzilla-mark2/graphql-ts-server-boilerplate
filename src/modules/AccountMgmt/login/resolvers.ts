@@ -7,7 +7,7 @@ import {
   confirmEmailError,
   forgotPasswordLockedError
 } from './errorMessages';
-import { userSessionIdPrefix } from '../../../_lookups/constants';
+import { userSessionIdPrefix } from '../../../utils/Lookups/constants';
 
 const errorResponse = [
   {

@@ -11,12 +11,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Redis = require("ioredis");
 const User_1 = require("../../../entity/User");
 const createTypeormConn_1 = require("../../../utils/createTypeormConn");
-const TestClient_1 = require("../../../utils/TestClient");
-const createForgotPasswordLink_1 = require("../../../utils/createForgotPasswordLink");
-const forgotPasswordLockAccount_1 = require("../../../utils/forgotPasswordLockAccount");
+const createForgotPasswordLink_1 = require("../../../utils/AccountMgmt/createForgotPasswordLink");
+const forgotPasswordLockAccount_1 = require("../../../utils/AccountMgmt/forgotPasswordLockAccount");
 const errorMessages_1 = require("../register/errorMessages");
 const errorMessages_2 = require("./errorMessages");
 const errorMessages_3 = require("../login/errorMessages");
+const testClient_1 = require("../../../testSetup/testClient");
 let conn;
 const redis = new Redis();
 const email = 'bob5@bob.com';
@@ -37,7 +37,7 @@ afterAll(() => __awaiter(this, void 0, void 0, function* () {
 }));
 describe('forgot password', () => {
     test('make sure it works', () => __awaiter(this, void 0, void 0, function* () {
-        const client = new TestClient_1.TestClient(process.env.TEST_HOST);
+        const client = new testClient_1.TestClient(process.env.TEST_HOST);
         yield forgotPasswordLockAccount_1.forgotPasswordLockAccount(userId, redis);
         const url = yield createForgotPasswordLink_1.createForgotPasswordLink('', userId, redis);
         const parts = url.split('/');

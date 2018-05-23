@@ -3,12 +3,12 @@ import { Connection } from 'typeorm';
 
 import { User } from '../../../entity/User';
 import { createTypeormConn } from '../../../utils/createTypeormConn';
-import { TestClient } from '../../../utils/TestClient';
-import { createForgotPasswordLink } from '../../../utils/createForgotPasswordLink';
-import { forgotPasswordLockAccount } from '../../../utils/forgotPasswordLockAccount';
+import { createForgotPasswordLink } from '../../../utils/AccountMgmt/createForgotPasswordLink';
+import { forgotPasswordLockAccount } from '../../../utils/AccountMgmt/forgotPasswordLockAccount';
 import { passwordNotLongEnough } from '../register/errorMessages';
 import { expiredKeyError } from './errorMessages';
 import { forgotPasswordLockedError } from '../login/errorMessages';
+import { TestClient } from '../../../testSetup/testClient';
 
 let conn: Connection;
 const redis = new Redis();
