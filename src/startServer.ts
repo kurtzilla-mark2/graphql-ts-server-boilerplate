@@ -12,7 +12,7 @@ import { redis } from './redis';
 import { createTypeormConn } from './utils/createTypeormConn';
 import { confirmEmail } from './routes/confirmEmail';
 import { genSchema } from './utils/genSchema';
-import { redisSessionPrefix } from './constants';
+import { redisSessionPrefix } from './_lookups/constants';
 import { User } from './entity/User';
 
 const RedisStore = connectRedis(session);

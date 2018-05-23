@@ -241,6 +241,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/ws@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-5.1.1.tgz#4adc1f1a5e92e7e0e95658fb35c7eab1bc52f4ac"
+  dependencies:
+    "@types/events" "*"
+    "@types/node" "*"
+
 "@types/yup@^0.24.3":
   version "0.24.3"
   resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.24.3.tgz#42da6b4d78d1394bf9af794a8b636ebb423f4f29"
