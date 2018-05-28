@@ -1,16 +1,17 @@
 import { Connection } from 'typeorm';
+import * as faker from 'faker';
 
 import { invalidLogin, confirmEmailError } from './errorMessages';
 import { User } from '../../../entity/User';
-import { createTypeormConn } from '../../../utils/createTypeormConn';
-import { TestClient } from '../../../testSetup/testClient';
+import { createTestConn } from '../../../testUtils/createTestConn';
+import { TestClient } from '../../../testUtils/testClient';
 
-const email = 'tom@bob.com';
-const password = 'jalksdf';
+const email = faker.internet.email();
+const password = faker.internet.password();
 
 let conn: Connection;
 beforeAll(async () => {
-  conn = await createTypeormConn();
+  conn = await createTestConn();
 });
 
 afterAll(async () => {
@@ -40,8 +41,8 @@ describe('login', () => {
     const client = new TestClient(process.env.TEST_HOST as string);
     await loginExpectError(
       client,
-      'some-email@bob.com',
-      'bad password',
+      faker.internet.email(),
+      faker.internet.password(),
       invalidLogin
     );
   });
@@ -58,7 +59,12 @@ describe('login', () => {
     await User.update({ email }, { confirmed: true });
 
     // // ensure we get an error if using a bogus password
-    await loginExpectError(client, email, 'aslkdfjaksdljf', invalidLogin);
+    await loginExpectError(
+      client,
+      email,
+      faker.internet.password(),
+      invalidLogin
+    );
 
     // // if we login correctly - all should be well
     const response = await client.login(email, password);
