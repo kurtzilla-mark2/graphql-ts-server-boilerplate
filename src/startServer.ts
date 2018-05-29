@@ -14,15 +14,18 @@ import { redisSessionPrefix } from './utils/Lookups/constants';
 import { implementPassportStrategies } from './utils/AccountMgmt/passportStrategies';
 import { createTestConn } from './testUtils/createTestConn';
 
-const NODE_ENV = process.env.NODE_ENV as string;
-const FRONTEND_HOST = process.env.FRONTEND_HOST as string;
-const API_PORT = process.env.API_PORT;
-const SESSION_KEY_NAME = process.env.SESSION_KEY_NAME as string;
-const SESSION_SECRET = process.env.SESSION_SECRET as string;
+const {
+  NODE_ENV,
+  FRONTEND_HOST,
+  API_PORT,
+  SESSION_KEY_NAME,
+  SESSION_SECRET
+} = process.env;
+
 const RedisStore = connectRedis(session);
 
 export const startServer = async () => {
-  if(NODE_ENV === 'test') {
+  if (NODE_ENV === 'test') {
     await redis.flushall();
   }
 
@@ -34,7 +37,7 @@ export const startServer = async () => {
       session: request.session,
       req: request
     })
-  });  
+  });
 
   server.express.use(
     new RateLimit({
@@ -53,8 +56,8 @@ export const startServer = async () => {
         client: redis as any,
         prefix: redisSessionPrefix
       }),
-      name: SESSION_KEY_NAME,
-      secret: SESSION_SECRET,
+      name: SESSION_KEY_NAME as string,
+      secret: SESSION_SECRET as string,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -67,16 +70,13 @@ export const startServer = async () => {
 
   const cors = {
     credentials: true,
-    origin:
-      NODE_ENV === 'test'
-        ? '*'
-        : (FRONTEND_HOST as string)
+    origin: NODE_ENV === 'test' ? '*' : FRONTEND_HOST
   };
 
   server.express.get('/confirm/:id', confirmEmail);
 
   const connection =
-    (NODE_ENV as string) === 'test'
+    NODE_ENV === 'test'
       ? await createTestConn(true)
       : await createTypeormConn();
 
