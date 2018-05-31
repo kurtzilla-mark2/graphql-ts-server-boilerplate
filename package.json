@@ -5,9 +5,11 @@
   "devDependencies": {
     "@types/bcryptjs": "^2.4.1",
     "@types/connect-redis": "^0.0.7",
+    "@types/dotenv-safe": "^5.0.0",
     "@types/express-rate-limit": "^2.9.3",
     "@types/express-session": "^1.15.8",
     "@types/faker": "^4.1.2",
+    "@types/glob": "^5.0.35",
     "@types/ioredis": "^3.2.7",
     "@types/jest": "^22.2.3",
     "@types/node": "^10.1.2",
@@ -33,11 +35,12 @@
     "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "connect-redis": "^3.3.3",
-    "dotenv": "^5.0.1",
+    "dotenv-safe": "^5.0.1",
     "express": "^4.16.3",
     "express-rate-limit": "^2.11.0",
     "express-session": "^1.15.6",
     "faker": "^4.1.0",
+    "glob": "^7.1.2",
     "graphql": "^0.13.2",
     "graphql-import": "^0.5.2",
     "graphql-request": "^1.5.2",
@@ -58,8 +61,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development nodemon --exec ts-node src/index.ts",
-    "dbgstart":
-      "NODE_ENV=development nodemon  --exec ts-node --inspect-brk src/index.ts",
+    "dbgstart": "NODE_ENV=development nodemon  --exec ts-node --inspect-brk src/index.ts",
     "test": "NODE_ENV=test jest --watch",
     "gen-schema-types": "ts-node src/scripts/createTypes.ts"
   },
@@ -70,6 +72,13 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }

@@ -1,5 +1,5 @@
 import 'reflect-metadata'; // necessary for typeorm
-import 'dotenv/config';
+import 'dotenv-safe/config';
 import { GraphQLServer } from 'graphql-yoga';
 import * as session from 'express-session';
 import * as connectRedis from 'connect-redis';
@@ -44,7 +44,7 @@ export const startServer = async () => {
       store: new RateLimitRedisStore({
         client: redis
       }),
-      windowMs: 1000 * 60 * 15, // every 15 minutes
+      windowMs: 1000 * 60 * 5, // minutes
       max: 100, // limit each ip to xxx reqs per windowMs
       delayMs: 0 // disable delaying - full speed until max limit is reached
     })

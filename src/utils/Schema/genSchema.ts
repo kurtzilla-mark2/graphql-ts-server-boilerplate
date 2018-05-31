@@ -1,34 +1,42 @@
 import { importSchema } from 'graphql-import';
 import * as path from 'path';
-import * as fs from 'fs';
+import * as glob from 'glob';
 import { mergeSchemas, makeExecutableSchema } from 'graphql-tools';
 import { GraphQLSchema } from 'graphql';
 
+const modulesDir = path.join(__dirname, '../../modules');
+
+// Don't make async!!!!!!!!!!
+// consuming function will flail
 export const genSchema = () => {
   const schemas: GraphQLSchema[] = [];
 
-  // loop thru the modules directory and find the categories
-  let modules: string[] = [];
-  const modulesDir = path.join(__dirname, '../../modules');
+  // find files in question - resolvers.ts and schema.graphql
+  const actionableFolders = glob.sync('**/+(resolvers.ts|schema.graphql)', {
+    cwd: modulesDir,
+    ignore: '_*/**',
+    nocase: true
+  });
 
-  const categories = fs
-    .readdirSync(modulesDir)
-    .filter(name => !name.startsWith('_'));
+  // create a distinct list of folders to loop thru as we
+  // need to makeExecutableSchema on a per-folder basis
+  const folders = actionableFolders.reduce(
+    (acc: string[], curr: string): string[] => {
+      // remove filename from path
+      const p = path.dirname(curr);
+      if (acc.indexOf(p) === -1) {
+        acc.push(p);
+      }
+      return acc;
+    },
+    []
+  );
 
-  categories.forEach(category => {
-    modules = fs
-      .readdirSync(`${modulesDir}/${category}`)
-      .filter(name => !name.startsWith('_'));
-
-    modules.forEach(mod => {
-      const {
-        resolvers
-      } = require(`${modulesDir}/${category}/${mod}/resolvers`);
-      const typeDefs = importSchema(
-        `${modulesDir}/${category}/${mod}/schema.graphql`
-      );
-      schemas.push(makeExecutableSchema({ resolvers, typeDefs }));
-    });
+  // now loop through found set of folders and make schema
+  folders.forEach(folder => {
+    const { resolvers } = require(`${modulesDir}/${folder}/resolvers`);
+    const typeDefs = importSchema(`${modulesDir}/${folder}/schema.graphql`);
+    schemas.push(makeExecutableSchema({ resolvers, typeDefs }));
   });
 
   return mergeSchemas({ schemas });
