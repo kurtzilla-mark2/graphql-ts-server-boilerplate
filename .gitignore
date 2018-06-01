@@ -3,6 +3,9 @@
 node_modules/
 build/
 temp/
+dist/
+coverage/
+
 
 .env
 *.log

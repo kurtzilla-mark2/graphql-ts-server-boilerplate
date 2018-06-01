@@ -26,6 +26,12 @@ export class User extends BaseEntity {
   @Column('text', { nullable: true })
   twitterId: string | null;
 
+  @Column('text', { nullable: true })
+  facebookId: string | null;
+
+  @Column('text', { nullable: true })
+  googleId: string | null;
+
   @BeforeInsert()
   async hashPasswordBeforeInsert() {
     if (this.password) {

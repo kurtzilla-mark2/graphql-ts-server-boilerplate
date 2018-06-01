@@ -1,23 +1,34 @@
 import 'reflect-metadata'; // necessary for typeorm
-import 'dotenv/config';
+import 'dotenv-safe/config';
 import { GraphQLServer } from 'graphql-yoga';
 import * as session from 'express-session';
 import * as connectRedis from 'connect-redis';
 import * as RateLimit from 'express-rate-limit';
 import * as RateLimitRedisStore from 'rate-limit-redis';
-import * as passport from 'passport';
-import { Strategy } from 'passport-twitter';
 
 import { redis } from './redis';
 import { createTypeormConn } from './utils/createTypeormConn';
 import { confirmEmail } from './routes/confirmEmail';
-import { genSchema } from './utils/genSchema';
-import { redisSessionPrefix } from './constants';
-import { User } from './entity/User';
+import { genSchema } from './utils/Schema/genSchema';
+import { redisSessionPrefix } from './utils/Lookups/constants';
+import { implementPassportStrategies } from './utils/AccountMgmt/passportStrategies';
+import { createTestConn } from './testUtils/createTestConn';
+
+const {
+  NODE_ENV,
+  FRONTEND_HOST,
+  API_PORT,
+  SESSION_KEY_NAME,
+  SESSION_SECRET
+} = process.env;
 
 const RedisStore = connectRedis(session);
 
 export const startServer = async () => {
+  if (NODE_ENV === 'test') {
+    await redis.flushall();
+  }
+
   const server = new GraphQLServer({
     schema: genSchema(),
     context: ({ request }) => ({
@@ -33,7 +44,7 @@ export const startServer = async () => {
       store: new RateLimitRedisStore({
         client: redis
       }),
-      windowMs: 1000 * 60 * 15, // every 15 minutes
+      windowMs: 1000 * 60 * 5, // minutes
       max: 100, // limit each ip to xxx reqs per windowMs
       delayMs: 0 // disable delaying - full speed until max limit is reached
     })
@@ -45,13 +56,13 @@ export const startServer = async () => {
         client: redis as any,
         prefix: redisSessionPrefix
       }),
-      name: 'qid',
-      secret: process.env.SESSION_SECRET as string,
+      name: SESSION_KEY_NAME as string,
+      secret: SESSION_SECRET as string,
       resave: false,
       saveUninitialized: false,
       cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: NODE_ENV === 'production',
         maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
       }
     })
@@ -59,83 +70,24 @@ export const startServer = async () => {
 
   const cors = {
     credentials: true,
-    origin:
-      process.env.NODE_ENV === 'test'
-        ? '*'
-        : (process.env.FRONTEND_HOST as string)
+    origin: NODE_ENV === 'test' ? '*' : FRONTEND_HOST
   };
 
   server.express.get('/confirm/:id', confirmEmail);
 
-  const connection = await createTypeormConn();
+  const connection =
+    NODE_ENV === 'test'
+      ? await createTestConn(true)
+      : await createTypeormConn();
 
-  // begin passport
-  passport.use(
-    new Strategy(
-      {
-        consumerKey: process.env.TWITTER_CONSUMER_KEY as string,
-        consumerSecret: process.env.TWITTER_CONSUMER_SECRET as string,
-        callbackURL: 'http://localhost:4000/auth/twitter/callback',
-        includeEmail: true
-      },
-      async (_, __, profile, cb) => {
-        const { id, emails } = profile;
-
-        const query = connection
-          .getRepository(User)
-          .createQueryBuilder('user')
-          .where('user.twitterId = :id', { id });
-
-        let email: string | null = null;
-
-        if (emails) {
-          email = emails[0].value;
-          query.orWhere('user.email = :email', { email });
-        }
-
-        let user = await query.getOne();
-
-        // this user needs to be registered
-        if (!user) {
-          user = await User.create({
-            twitterId: id,
-            email
-          }).save();
-        } else if (!user.twitterId) {
-          // merge account
-          // we found user by email
-          user.twitterId = id;
-          await user.save();
-        } else {
-          // we have a twitterId - nothing to do
-          // login
-        }
-
-        return cb(null, { id: user.id });
-      }
-    )
-  );
-
-  server.express.use(passport.initialize());
-  // this is where user goes to sign in - redirects to twitter
-  server.express.get('/auth/twitter', passport.authenticate('twitter'));
-  // this is where twitter redirects back to after auth (or failure)
-  server.express.get(
-    '/auth/twitter/callback',
-    passport.authenticate('twitter', { session: false }),
-    (req, res) => {
-      (req.session as any).userId = (req.user as any).id;
-      // @todo redirect to frontend
-      res.redirect('/');
-    }
-  );
-  // end passport
+  implementPassportStrategies(connection, server);
 
   const app = await server.start({
     cors,
-    port: process.env.NODE_ENV === 'test' ? 0 : 4000
+    port: NODE_ENV === 'test' ? 0 : API_PORT
   });
-  console.log('Server is running on localhost:4000');
+
+  console.log(`Server is running on localhost:${API_PORT}`);
 
   return app;
 };
