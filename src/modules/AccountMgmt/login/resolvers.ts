@@ -18,7 +18,7 @@ const errorResponse = [
 
 export const resolvers: ResolverMap = {
   Query: {
-    bye2: () => 'bye'
+    stub: () => 'stub'
   },
   Mutation: {
     login: async (

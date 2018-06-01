@@ -1,7 +1,7 @@
 # import Error from "../../../utils/Schema/shared.graphql"
 
 type Query {
-  bye2: String
+  stub: String
 }
 
 type Mutation {
